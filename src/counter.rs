@@ -1,6 +1,7 @@
+use anyhow::Result;
 use std::fs::{read_dir, read_to_string};
-use std::io::Result;
 use std::path::Path;
+use tiktoken_rs::cl100k_base;
 
 type StringPath = String;
 
@@ -40,7 +41,7 @@ pub fn is_md(path: &StringPath) -> bool {
 }
 
 pub fn read_txt(path: &StringPath) -> Result<String> {
-    read_to_string(path)
+    Ok(read_to_string(path)?)
 }
 
 pub fn recursive_ls(path: &StringPath) -> Result<Vec<FolderItems>> {
@@ -63,8 +64,10 @@ pub fn recursive_ls(path: &StringPath) -> Result<Vec<FolderItems>> {
     return Ok(result);
 }
 
-pub fn count_tokens(_txt: String) -> usize {
-    todo!();
+pub fn count_tokens(txt: &String) -> Result<usize> {
+    let bpe = cl100k_base()?;
+    let tokens = bpe.encode_with_special_tokens(txt);
+    Ok(tokens.len())
 }
 
 pub fn recursive_count_tokens(path: &StringPath) -> Result<usize> {
@@ -82,5 +85,5 @@ pub fn recursive_count_tokens(path: &StringPath) -> Result<usize> {
         .filter_map(|txt| txt.ok())
         .collect::<Vec<String>>()
         .join("\n------\n");
-    return Ok(count_tokens(txt_concat));
+    return count_tokens(&txt_concat);
 }

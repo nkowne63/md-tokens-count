@@ -3,5 +3,5 @@
 version = 3
 
 [[package]]
-name = "obsidian-tokens-count"
+name = "md-tokens-count"
 version = "0.1.0"

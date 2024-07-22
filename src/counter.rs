@@ -1,7 +1,7 @@
 use anyhow::Result;
 use std::fs::{read_dir, read_to_string};
 use std::path::Path;
-use tiktoken_rs::cl100k_base;
+use tiktoken_rs::o200k_base;
 
 type StringPath = String;
 
@@ -65,7 +65,7 @@ fn recursive_ls(path: &StringPath) -> Result<Vec<FolderItems>> {
 }
 
 fn count_tokens(txt: &String) -> Result<usize> {
-    let bpe = cl100k_base()?;
+    let bpe = o200k_base()?;
     let tokens = bpe.encode_with_special_tokens(txt);
     Ok(tokens.len())
 }

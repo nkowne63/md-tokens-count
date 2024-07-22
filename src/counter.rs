@@ -5,12 +5,12 @@ use tiktoken_rs::cl100k_base;
 
 type StringPath = String;
 
-pub enum FolderItems {
+enum FolderItems {
     File(StringPath),
     Folder(StringPath),
 }
 
-pub fn ls(path: &StringPath) -> Result<Vec<FolderItems>> {
+fn ls(path: &StringPath) -> Result<Vec<FolderItems>> {
     let entries = read_dir(path)?;
     let folder_items: Vec<FolderItems> = entries
         .map(|entry| {
@@ -31,7 +31,7 @@ pub fn ls(path: &StringPath) -> Result<Vec<FolderItems>> {
     return Ok(folder_items);
 }
 
-pub fn is_md(path: &StringPath) -> bool {
+fn is_md(path: &StringPath) -> bool {
     let path = Path::new(path);
     let extension = path.extension();
     match extension {
@@ -40,11 +40,11 @@ pub fn is_md(path: &StringPath) -> bool {
     }
 }
 
-pub fn read_txt(path: &StringPath) -> Result<String> {
+fn read_txt(path: &StringPath) -> Result<String> {
     Ok(read_to_string(path)?)
 }
 
-pub fn recursive_ls(path: &StringPath) -> Result<Vec<FolderItems>> {
+fn recursive_ls(path: &StringPath) -> Result<Vec<FolderItems>> {
     let current = ls(path)?;
     let mut result = vec![];
     for item in current {
@@ -64,7 +64,7 @@ pub fn recursive_ls(path: &StringPath) -> Result<Vec<FolderItems>> {
     return Ok(result);
 }
 
-pub fn count_tokens(txt: &String) -> Result<usize> {
+fn count_tokens(txt: &String) -> Result<usize> {
     let bpe = cl100k_base()?;
     let tokens = bpe.encode_with_special_tokens(txt);
     Ok(tokens.len())
